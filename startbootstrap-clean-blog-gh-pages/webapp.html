@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riddle Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        h1 {
+            color: #333;
+        }
+        .riddle {
+            font-size: 1.5em;
+            margin: 20px 0;
+        }
+        input {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .hint {
+            font-size: 1.2em;
+            color: #ff6600;
+            margin-top: 20px;
+        }
+        .result {
+            font-size: 1.2em;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+        }
+        .tries {
+            margin-top: 20px;
+        }
+        .play-again-btn {
+            background-color: #ff6600;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Riddle Generator</h1>
+        <p class="riddle" id="riddleText">What has keys but can't open locks?</p>
+        
+        <input type="text" id="userGuess" placeholder="Enter your guess" />
+        <button id="submitGuessBtn">Submit Guess</button>
+
+        <div class="hint" id="hint"></div>
+        <div class="result" id="result"></div>
+        <div class="tries" id="tries"></div>
+        <button id="playAgainBtn" class="play-again-btn" style="display: none;" onclick="resetGame()">Play Again</button>
+    </div>
+
+    <script>
+        // Array of riddles with their answers and hints (now 10 riddles)
+        const riddles = [
+            {
+                riddle: "What has keys but can't open locks?",
+                answer: "piano",
+                hints: [
+                    "It's a musical instrument.",
+                    "It has a lot of black and white keys.",
+                    "You play it with your hands.",
+                    "It's commonly found in music studios and homes.",
+                    "It can be grand or upright."
+                ]
+            },
+            {
+                riddle: "I speak without a mouth and hear without ears. I have no body, but I come alive with wind. What am I?",
+                answer: "echo",
+                hints: [
+                    "It is a sound that repeats.",
+                    "It can be heard in a valley or canyon.",
+                    "It is a phenomenon that occurs when sound bounces off surfaces.",
+                    "It doesn't have a physical form.",
+                    "It responds to noise made nearby."
+                ]
+            },
+            {
+                riddle: "The more of this there is, the less you see. What is it?",
+                answer: "darkness",
+                hints: [
+                    "It is the opposite of light.",
+                    "You can't see anything in it.",
+                    "It occurs when there is no light around.",
+                    "It can make the night feel more intense.",
+                    "It surrounds you when the lights go out."
+                ]
+            },
+            {
+                riddle: "What comes once in a minute, twice in a moment, but never in a thousand years?",
+                answer: "the letter m",
+                hints: [
+                    "It's a letter of the alphabet.",
+                    "It's found in the word 'minute'.",
+                    "It's not a physical object.",
+                    "It appears twice in the word 'moment'.",
+                    "It is never found in the word 'thousand'."
+                ]
+            },
+            {
+                riddle: "What can travel around the world while staying in the corner?",
+                answer: "a stamp",
+                hints: [
+                    "It's often stuck to envelopes.",
+                    "It's small and rectangular.",
+                    "It gets attached to letters sent in the mail.",
+                    "It can travel with the letter across the globe.",
+                    "It’s typically found in the corner of the envelope."
+                ]
+            },
+            {
+                riddle: "What has a head, a tail, but no body?",
+                answer: "a coin",
+                hints: [
+                    "It’s small and made of metal.",
+                    "It has two sides, called heads and tails.",
+                    "It’s used for currency.",
+                    "It’s flipped in games of chance.",
+                    "It has no physical body."
+                ]
+            },
+            {
+                riddle: "What is full of holes but still holds a lot of weight?",
+                answer: "a net",
+                hints: [
+                    "It’s used for catching things.",
+                    "It’s often used in sports or fishing.",
+                    "It’s made of strong material.",
+                    "It has many holes.",
+                    "Despite the holes, it can hold weight."
+                ]
+            },
+            {
+                riddle: "What has an eye but cannot see?",
+                answer: "a needle",
+                hints: [
+                    "It’s used for sewing.",
+                    "It’s long and thin.",
+                    "It has a small hole at one end.",
+                    "It’s used with thread.",
+                    "It can’t see anything despite having an eye."
+                ]
+            },
+            {
+                riddle: "What has hands but can’t clap?",
+                answer: "a clock",
+                hints: [
+                    "It’s used to tell time.",
+                    "It has two hands.",
+                    "It’s found in most homes and offices.",
+                    "It can be analog or digital.",
+                    "Despite having hands, it cannot clap."
+                ]
+            },
+            {
+                riddle: "What can you break, even if you never pick it up or touch it?",
+                answer: "a promise",
+                hints: [
+                    "It’s something intangible.",
+                    "It’s often made with words.",
+                    "It’s a commitment.",
+                    "It can be broken without physical contact.",
+                    "It’s related to trust."
+                ]
+            }
+        ];
+
+        let triesLeft = 5;
+        let currentHint = 0;
+        let currentRiddle;
+
+        // Function to select a random riddle
+        function getRandomRiddle() {
+            const randomIndex = Math.floor(Math.random() * riddles.length);
+            return riddles[randomIndex];
+        }
+
+        // Function to check the user's answer
+        function checkAnswer() {
+            const userGuess = document.getElementById("userGuess").value.toLowerCase().trim();
+            const hintElement = document.getElementById("hint");
+            const resultElement = document.getElementById("result");
+            const triesElement = document.getElementById("tries");
+
+            // If the input is empty, show a message
+            if (userGuess === "") {
+                resultElement.innerHTML = "<span class='error'>Please enter a guess!</span>";
+                return;
+            }
+
+            // Check if the guess is correct
+            if (userGuess === currentRiddle.answer) {
+                resultElement.innerHTML = "<span class='result'>Correct! Well done!</span>";
+                hintElement.innerHTML = "";
+                triesElement.innerHTML = "";
+                document.getElementById("playAgainBtn").style.display = "block";
+            } else {
+                triesLeft--;
+                if (triesLeft > 0) {
+                    resultElement.innerHTML = "<span class='error'>Wrong answer! Try again.</span>";
+                    hintElement.innerHTML = "Hint: " + currentRiddle.hints[currentHint];
+                    currentHint++;
+                    triesElement.innerHTML = `You have ${triesLeft} tries left.`;
+                } else {
+                    resultElement.innerHTML = "<span class='error'>Game Over! The correct answer was '" + currentRiddle.answer + "'.</span>";
+                    hintElement.innerHTML = "";
+                    triesElement.innerHTML = "";
+                    document.getElementById("playAgainBtn").style.display = "block";
+                }
+            }
+        }
+
+        // Function to reset the game and get a new riddle
+        function resetGame() {
+            // Get a new random riddle
+            currentRiddle = getRandomRiddle();
+            triesLeft = 5;
+            currentHint = 0;
+
+            // Update the riddle and reset the game state
+            document.getElementById("riddleText").textContent = currentRiddle.riddle;
+            document.getElementById("userGuess").value = "";
+            document.getElementById("hint").innerHTML = "";
+            document.getElementById("result").innerHTML = "";
+            document.getElementById("tries").innerHTML = `You have ${triesLeft} tries left.`;
+            document.getElementById("playAgainBtn").style.display = "none";
+        }
+
+        // Add event listener to the submit button to check the answer
+        document.getElementById("submitGuessBtn").addEventListener("click", checkAnswer);
+
+        // Initialize the first riddle when the page loads
+        resetGame();
+    </script>
+
+</body>
+</html>

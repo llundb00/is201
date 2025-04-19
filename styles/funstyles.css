@@ -1,0 +1,127 @@
+/* Fun Blingy Styles */
+
+/* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(45deg, #ff8c00, #ff00ff); /* Gradient background */
+    color: #fff;
+    line-height: 1.6;
+    animation: gradientBackground 10s ease infinite; /* Moving gradient effect */
+}
+
+/* Navigation bar */
+nav {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 15px 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 20px;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.3s, transform 0.3s;
+}
+
+nav a:hover {
+    color: #ff6347;  /* Glowing red */
+    transform: scale(1.1); /* Slight hover zoom */
+    text-shadow: 0 0 8px #ff6347, 0 0 20px #ff6347, 0 0 30px #ff6347; /* Neon glow */
+}
+
+/* Header section */
+header {
+    background-color: rgba(50, 205, 50, 0.8); /* Semi-transparent green */
+    color: white;
+    text-align: center;
+    padding: 80px 0;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border-radius: 10px;
+}
+
+header h1 {
+    font-size: 4em;
+    letter-spacing: 5px;
+    text-shadow: 0 0 10px #ff6347, 0 0 20px #ff6347, 0 0 30px #ff6347, 0 0 40px #ff6347;
+    animation: neonGlow 1.5s ease-in-out infinite alternate; /* Glowing effect */
+}
+
+header p {
+    font-size: 1.8em;
+    margin-top: 20px;
+    font-weight: bold;
+    text-shadow: 0 0 8px #fff, 0 0 12px #ff00ff, 0 0 15px #ff00ff;
+}
+
+/* Main content area */
+.main-content {
+    padding: 40px 20px;
+    text-align: center;
+    font-size: 1.2em;
+    animation: sparkle 1.5s linear infinite;
+}
+
+.main-content h2 {
+    font-size: 2.8em;
+    color: #ff6347;  /* Glowing red */
+    text-shadow: 0 0 8px #ff6347, 0 0 20px #ff6347, 0 0 30px #ff6347;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    font-size: 1.4em;
+    margin: 10px 0;
+    text-shadow: 0 0 5px #fff, 0 0 10px #00ffff, 0 0 15px #00ffff;
+}
+
+/* Footer section */
+footer {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    font-size: 1.1em;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+    border-top: 5px solid #ff6347;
+}
+
+/* Keyframe animations */
+
+/* Gradient animation */
+@keyframes gradientBackground {
+    0% { background: linear-gradient(45deg, #ff8c00, #ff00ff); }
+    50% { background: linear-gradient(45deg, #ff00ff, #00ffff); }
+    100% { background: linear-gradient(45deg, #00ffff, #ff8c00); }
+}
+
+/* Neon glow effect */
+@keyframes neonGlow {
+    0% {
+        text-shadow: 0 0 5px #ff6347, 0 0 10px #ff6347, 0 0 15px #ff6347, 0 0 20px #ff6347;
+    }
+    100% {
+        text-shadow: 0 0 15px #ff6347, 0 0 25px #ff6347, 0 0 35px #ff6347, 0 0 45px #ff6347;
+    }
+}
+
+/* Sparkle effect */
+@keyframes sparkle {
+    0% { text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff; }
+    50% { text-shadow: 0 0 20px #ff6347, 0 0 30px #ff6347, 0 0 40px #ff6347; }
+    100% { text-shadow: 0 0 5px #ff00ff, 0 0 10px #ff00ff, 0 0 15px #ff00ff; }
+}

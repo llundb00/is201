@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Riddle Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      text-align: center;
+      background-color: #f4f4f4;
+    }
+
+    #game-container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 80%;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+
+    #hint, #message, #play-again {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    #play-again {
+      display: none;
+    }
+
+    #back-home {
+      margin-top: 30px;
+      display: inline-block;
+      font-size: 16px;
+      text-decoration: none;
+      color: #007BFF;
+      border: 1px solid #007BFF;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    #back-home:hover {
+      background-color: #007BFF;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <h2>Riddle Me This 🤔</h2>
+    <p id="riddle">Loading riddle...</p>
+
+    <input type="text" id="answer" placeholder="Your answer here...">
+    <br>
+    <button onclick="submitAnswer()">Submit</button>
+
+    <p id="hint" style="color: #ff9900;"></p>
+    <p id="message"></p>
+    <button id="play-again" onclick="resetGame()">Play Again</button>
+
+    <a href="index.html" id="back-home">Back to Homepage</a>
+  </div>
+
+  <script>
+    // List of riddles and their answers
+    const riddles = [
+      { 
+        question: "I speak without a mouth and hear without ears. I have nobody, but I come alive with wind. What am I?", 
+        answer: "echo", 
+        hint: "It's something you can hear, but not see or touch."
+      },
+      { 
+        question: "What has keys but can't open locks?", 
+        answer: "piano", 
+        hint: "You play it with your fingers."
+      },
+      { 
+        question: "What has a heart that doesn’t beat?", 
+        answer: "artichoke", 
+        hint: "It's a type of vegetable."
+      },
+      { 
+        question: "What comes once in a minute, twice in a moment, but never in a thousand years?", 
+        answer: "the letter M", 
+        hint: "It's a letter."
+      },
+      { 
+        question: "What is so fragile that saying its name breaks it?", 
+        answer: "silence", 
+        hint: "It's a state of quiet."
+      },
+      { 
+        question: "The more of this there is, the less you see. What is it?", 
+        answer: "darkness", 
+        hint: "It's the absence of light."
+      },
+      { 
+        question: "What has many teeth but can’t bite?", 
+        answer: "comb", 
+        hint: "You use it on your hair."
+      },
+      { 
+        question: "What has one eye but can’t see?", 
+        answer: "needle", 
+        hint: "It's a tool used for sewing."
+      },
+      { 
+        question: "What is full of holes but still holds a lot of weight?", 
+        answer: "net", 
+        hint: "It's often used in fishing."
+      },
+      { 
+        question: "What can travel around the world while staying in the corner?", 
+        answer: "stamp", 
+        hint: "It's used on letters."
+      }
+    ];
+
+    // Variables to track game state
+    let attempts = 0;
+    let maxAttempts = 5;
+    let currentRiddle;
+    let currentAnswer;
+    let currentHint;
+
+    // Start a new game
+    function startGame() {
+      // Randomly select a riddle from the list
+      const randomIndex = Math.floor(Math.random() * riddles.length);
+      currentRiddle = riddles[randomIndex];
+      currentAnswer = currentRiddle.answer.toLowerCase();
+      currentHint = currentRiddle.hint;
+
+      // Display the riddle
+      document.getElementById("riddle").innerText = currentRiddle.question;
+
+      // Reset game state
+      attempts = 0;
+      document.getElementById("hint").innerText = "";
+      document.getElementById("message").innerText = "";
+      document.getElementById("answer").disabled = false;
+      document.querySelector("button").disabled = false;
+      document.getElementById("play-again").style.display = "none";
+      document.getElementById("answer").value = "";
+    }
+
+    // Handle the answer submission
+    function submitAnswer() {
+      const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+      attempts++;
+
+      if (userAnswer === currentAnswer) {
+        document.getElementById("message").innerText = `✅ Correct! It is "${currentAnswer}".`;
+        endGame();
+      } else {
+        if (attempts === 3) {
+          document.getElementById("hint").innerText = "💡 Hint: " + currentHint;
+        }
+
+        if (attempts >= maxAttempts) {
+          document.getElementById("message").innerText = `❌ Out of tries! The correct answer was "${currentAnswer}".`;
+          endGame();
+        } else {
+          document.getElementById("message").innerText = `❌ Incorrect! You have ${maxAttempts - attempts} tries left.`;
+        }
+      }
+    }
+
+    // End the game after correct or failed attempts
+    function endGame() {
+      document.getElementById("answer").disabled = true;
+      document.querySelector("button").disabled = true;
+      document.getElementById("play-again").style.display = "inline-block";
+    }
+
+    // Reset the game
+    function resetGame() {
+      startGame();
+    }
+
+    // Start the game when the page loads
+    startGame();
+  </script>
+
+</body>
+</html>
